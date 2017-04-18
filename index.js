@@ -1,19 +1,37 @@
 'use strict';
 
 exports.onHandleCode = function onHandleCode(ev) {
-  ev.data.code = ev.data.code
-    .replace(/module\s*\.\s*exports\s*=\s*{\s*([\s\S]*?)\s*}\s*;/gm,
-        function(str, exports) {
-          return 'export { ' +
-            exports.replace(/(\w+)\s*:\s*(\w+)\s*/g, '$2 as $1') +
-              ' };';
-        })
-    .replace(/module\s*\.\s*exports\s*=\s?/g,
-             'export default ')
-    .replace(/exports\s*\.\s*([_\d\w]+)\s*=\s*(class|function\*?)\s+\1/g,
-             'export $2 $1')
-    .replace(/exports\s*\.\s*([_\d\w]+)\s*=\s*\1\s*;/g,
-             'export { $1 };')
-    .replace(/exports\s*\.\s*([_\d\w]+)\s*=/,
-             'export let $1 =');
+  var code_trimmed = ev.data.code.trim();
+  if (code_trimmed.startsWith('(function(){') && code_trimmed.endsWith('}).call(this);') && code_trimmed.includes("out$ = typeof exports != 'undefined' && exports || this;")) {
+    //code_trimmed = code_trimmed.split("out$ = typeof exports != 'undefined' && exports || this;").join("out$ = exports || this;")
+    code_trimmed = code_trimmed.substr('(function(){'.length);
+    code_trimmed = code_trimmed.substr(0, code_trimmed.lastIndexOf('}).call(this);'))
+    let output_code_lines = ["'use strict';", '/* this is not json */'];
+    for (let line of code_trimmed.split('\n')) {
+      if (line.includes("out$ = typeof exports != 'undefined' && exports || this;")) {
+        continue
+      }
+      if (line.includes('require')) {
+        continue
+      }
+      if (line.includes('gexport')) {
+        continue
+      }
+      if (line.includes('ref$')) {
+        continue
+      }
+      if (line.includes('import$')) {
+        continue
+      }
+      if (line.trim().startsWith('out$.') && line.includes(' = ') && (line.includes('= function(') || line.includes('= async function('))) {
+        let modified_line = line.substr(0, line.indexOf('out$.')) + 'export var ' + line.substr(line.indexOf(' = ') + 3)
+        output_code_lines.push(modified_line)
+      } else {
+        output_code_lines.push(line)
+      }
+    }
+    code_trimmed = output_code_lines.join('\n')
+    ev.data.code = code_trimmed
+  }
+  return;
 };

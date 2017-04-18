@@ -1,25 +1,25 @@
 {
-  "name": "esdoc-node",
+  "name": "esdoc-livescript",
   "version": "1.0.0",
-  "description": "Allows esdoc to use node.js exports and module.exports.",
+  "description": "Allows esdoc to use livescript exports",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ddude/esdoc-node.git"
+    "url": "git+https://github.com/gkovacs/esdoc-livescript.git"
   },
   "keywords": [
     "esdoc",
-    "node"
+    "livescript"
   ],
-  "author": "Jeremie Pelletier",
+  "author": "Geza Kovacs",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ddude/esdoc-node/issues"
+    "url": "https://github.com/gkovacs/esdoc-livescript/issues"
   },
-  "homepage": "https://github.com/ddude/esdoc-node#readme",
+  "homepage": "https://github.com/gkovacs/esdoc-livescript#readme",
   "devDependencies": {
     "tape": "^4.5.1"
   }
