@@ -1,6 +1,6 @@
 {
   "name": "esdoc-livescript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows esdoc to use livescript exports",
   "main": "index.js",
   "scripts": {
